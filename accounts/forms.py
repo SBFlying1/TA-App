@@ -2,6 +2,10 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 from .models import TA_User, TAProfile
 class TASignUpForm(UserCreationForm): 
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
+
     class Meta: 
         model = TA_User
         fields = (
