@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Edit Post</h1>
+<h1>Add your TA information</h1>
 <form action="" method="post">{% csrf_token %}
     {{ form }}
-    <input type="submit" value="Update">
+    <button type="submit">Save Profile</button>
 </form>
 {% endblock content %}
