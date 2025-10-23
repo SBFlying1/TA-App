@@ -6,7 +6,11 @@
   <h2>Upcoming TA Availability</h2>
   {% for slot in sorted_slots %}
     <div class="card mt-3 p-3">
-      <strong>{{ slot.profile.user.first_name }} {{ slot.profile.user.last_name }}</strong><br>
+      <strong>
+        <a href="{% url 'ta_profile_detail' slot.profile.pk %}">
+          {{ slot.profile.user.first_name }} {{ slot.profile.user.last_name }}
+        </a>
+      </strong><br>
       {{ slot.get_day_display }}: {{ slot.start_time }} – {{ slot.end_time }}
     </div>
   {% empty %}

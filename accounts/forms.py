@@ -18,16 +18,9 @@ class TASignUpForm(UserCreationForm):
         )
 
 class TAProfileForm(forms.ModelForm):
-    COURSE_CHOICES = [
-        ("CSCI133", "CSCI 321"),
-        ("CSCI233", "CSCI 123"),
-        ("CSCI253", "CSCI 253"),
-        ("CSCI212", "CSCI 273"),
-    ]
-
     courses = forms.MultipleChoiceField(
-        choices=COURSE_CHOICES,
-        widget=forms.CheckboxSelectMultiple,
+        choices=TAProfile.COURSE_CHOICES,
+        widget=forms.CheckboxSelectMultiple(),
         required=False,
     )
     

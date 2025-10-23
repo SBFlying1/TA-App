@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h1>{{ profile.user.first_name }} {{ profile.user.last_name }}</h1>
+  <p><strong>Description:</strong> {{ profile.description|default:"No description provided." }}</p>
+
+  <h3>Courses</h3>
+  <ul>
+    {% for course in profile.courses %}
+      <li>{{ course }}</li>
+    {% empty %}
+      <li>No courses listed.</li>
+    {% endfor %}
+  </ul>
+
+  <h3>Availability</h3>
+  <ul>
+    {% for slot in slots %}
+      <li>{{ slot.get_day_display }}: {{ slot.start_time }} – {{ slot.end_time }}</li>
+    {% empty %}
+      <li>No time slots added yet.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

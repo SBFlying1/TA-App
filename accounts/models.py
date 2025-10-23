@@ -20,10 +20,10 @@ class TAProfile(models.Model):
     description = models.TextField(blank=True)
 
     COURSE_CHOICES = [
-        ("CSCI132", "CSCI 132"),
-        ("CSCI232", "CSCI 232"),
-        ("CSCI252", "CSCI 252"),
-        ("CSCI272", "CSCI 272"),
+        ("CSCI150", "CSCI258"),
+        ("CSCI151", "CSCI332"),
+        ("CSCI152", "CSCI340"),
+        ("CSCI232", "CSCI272"),
     ]
 
 class AvailabilitySlot(models.Model):

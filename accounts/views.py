@@ -58,6 +58,11 @@ class TAProfileUpdateView(LoginRequiredMixin, UpdateView):
         context = self.get_context_data(form=form)
         context['slot_formset'] = slot_formset
         return self.render_to_response(context)
+    
+def ta_profile_detail(request, pk):
+    profile = TAProfile.objects.get(pk=pk)
+    slots = AvailabilitySlot.objects.filter(profile=profile).order_by('day', 'start_time')
+    return render(request, "registration/ta_profile_detail.html", {"profile": profile, "slots": slots})
 
 DAY_MAP = {
     'Monday': 0,
