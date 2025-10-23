@@ -44,14 +44,8 @@
                         </form>
                         {% else %}
                             {% if request.resolver_match.url_name not in 'login signup' %}
-                            <form method="post" action="{% url 'login' %}" style="display:inline"> 
-                                {% csrf_token %}
-                                <button class="nav-link active" style="display:inline; cursor:pointer;">Log In</button> ||
-                            </form>
-                            <form method="post" action="{% url 'signup' %}" style="display:inline">
-                                {% csrf_token %}
-                                <button class="nav-link active" style="display:inline; cursor:pointer;">Sign Up</button>
-                            </form>
+                            <li><a class="nav-link active" aria-current="page" href="{% url 'login' %}">Log In</a></li>
+                            <li><a class="nav-link active" aria-current="page" href="{% url 'signup' %}">Sign Up</a></li>
                             {% endif %}
                         {% endif %}
                     </li>
