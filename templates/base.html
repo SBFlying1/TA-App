@@ -8,35 +8,68 @@
 </head>
 
 <body>
-    <div>
-        <header>
-            <div class="nav-left">
-                <h1><a href="{% url 'home' %}">Fishbowl Tutors</a></h1>
-            </div>
-            <div class="nav-right">
-                {% if user.is_authenticated %}
-                    <p>Hi {{ user.username }}!</p>
-                    {% if user.profile %}
-                        <a href="{% url 'profile_edit' %}">Edit Info</a> |
-                    {% else %}
-                        <a href="{% url 'profile_edit' %}">Create Info</a> |
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">Fishbowl Tutors</a>
+            <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                        </li>
+                        {% if user.profile %}
+                            <li><a class="nav-link active" aria-current="page" href="{% url 'profile_edit' %}">Edit Info</a></li>
+                        {% else %}
+                            <li><a class="nav-link active" aria-current="page" href="{% url 'profile_edit' %}">Create Info</a></li>
+                        {% endif %}
                     {% endif %}
-                    <form action="{% url 'logout' %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit">Log Out</button>
-                    </form>
-                {% else %}
-                    {% if request.resolver_match.url_name not in 'login signup' %}
-                    <p>Are you a TA? If so,</p>
-                    <a href="{% url 'login' %}">Log In</a> |
-                    <a href="{% url 'signup' %}">Sign Up</a>
-                    {% endif %}
-                {% endif %}
+                </ul>
             </div>
-        </header>
+            <div class="mr-auto">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        {% if user.is_authenticated %}
+                        {{ user.username }} ||
+                        <form method="post" action="{% url 'logout' %}"
+                            style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link active"
+                            style="display:inline; cursor:pointer;">Logout</button>
+                        </form>
+                        {% else %}
+                            {% if request.resolver_match.url_name not in 'login signup' %}
+                            <form method="post" action="{% url 'login' %}" style="display:inline"> 
+                                {% csrf_token %}
+                                <button class="nav-link active" style="display:inline; cursor:pointer;">Log In</button> ||
+                            </form>
+                            <form method="post" action="{% url 'signup' %}" style="display:inline">
+                                {% csrf_token %}
+                                <button class="nav-link active" style="display:inline; cursor:pointer;">Sign Up</button>
+                            </form>
+                            {% endif %}
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<main>
+    <div class="container">
         {% block content %}
         {% endblock content %}
     </div>
+</main>
 
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.min.js"></script>
+
+{% block javascript %}
+{% endblock javascript %}
 </body>
 </html>

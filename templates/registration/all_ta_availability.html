@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% if user.is_authenticated %}
 <div class="container mt-4">
   <h1>Welcome to Fishbowl Tutors</h1>
   <hr>
@@ -17,4 +18,5 @@
     <p>No available time slots yet.</p>
   {% endfor %}
 </div>
+{% endif %}
 {% endblock %}
