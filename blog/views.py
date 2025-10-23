@@ -25,3 +25,8 @@ class BlogDeleteView(DeleteView):
     model = Post
     template_name = "post_delete.html"
     success_url = reverse_lazy("home")
+
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'home.html')

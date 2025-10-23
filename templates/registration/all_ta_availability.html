@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h1>Welcome to Fishbowl Tutors</h1>
+  <hr>
+  <h2>Upcoming TA Availability</h2>
+  {% for slot in sorted_slots %}
+    <div class="card mt-3 p-3">
+      <strong>{{ slot.profile.user.first_name }} {{ slot.profile.user.last_name }}</strong><br>
+      {{ slot.get_day_display }}: {{ slot.start_time }} – {{ slot.end_time }}
+    </div>
+  {% empty %}
+    <p>No available time slots yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -7,6 +7,9 @@ from django.urls import reverse_lazy
 from .models import TAProfile, TA_User, AvailabilitySlot
 from django.shortcuts import redirect
 from django.forms import inlineformset_factory
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.shortcuts import render
 
 class SignUpView(CreateView):
     model = TA_User
@@ -55,4 +58,28 @@ class TAProfileUpdateView(LoginRequiredMixin, UpdateView):
         context = self.get_context_data(form=form)
         context['slot_formset'] = slot_formset
         return self.render_to_response(context)
-    
+
+DAY_MAP = {
+    'Monday': 0,
+    'Tuesday': 1,
+    'Wednesday': 2,
+    'Thursday': 3,
+    'Friday': 4,
+    'Saturday': 5,
+    'Sunday': 6,
+}
+
+def all_ta_availability(request):
+    now = timezone.localtime()
+    current_weekday = now.weekday()
+    slots = AvailabilitySlot.objects.select_related('profile__user')
+    def next_occurrence(slot):
+        slot_weekday = int(slot.day)
+        days_ahead = (slot_weekday - current_weekday) % 7
+        slot_date = now.date() + timedelta(days=days_ahead)
+        slot_datetime = datetime.combine(slot_date, slot.start_time)
+        if days_ahead == 0 and slot.start_time < now.time():
+            slot_datetime += timedelta(days=7)
+        return timezone.make_aware(slot_datetime)
+    sorted_slots = sorted(slots, key=next_occurrence)
+    return render(request, 'registration/all_ta_availability.html', {'sorted_slots': sorted_slots})
