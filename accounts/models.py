@@ -4,11 +4,11 @@ from datetime import time
 
 def generate_time_choices():
     times = []
-    for hour in range(0, 24):
+    for hour in range(8, 18):
         for minute in (0, 30):
             t = time(hour, minute)
             label = t.strftime("%I:%M %p")
-            times.append((t.strftime("%H:%M"), label))
+            times.append((t, label))   
     return times
 
 class TA_User(AbstractUser): 
@@ -16,12 +16,8 @@ class TA_User(AbstractUser):
 
 class TAProfile(models.Model):
     user = models.OneToOneField(TA_User, on_delete=models.CASCADE, related_name="profile")
-
-    availability_start = models.TimeField(choices=generate_time_choices(), blank=True)
-    availability_end = models.TimeField(choices=generate_time_choices(), blank=True)
-    description = models.TextField(blank=True)
-
     courses = models.JSONField(default=list, blank=True)
+    description = models.TextField(blank=True)
 
     COURSE_CHOICES = [
         ("CSCI132", "CSCI 132"),
@@ -29,3 +25,24 @@ class TAProfile(models.Model):
         ("CSCI252", "CSCI 252"),
         ("CSCI272", "CSCI 272"),
     ]
+
+class AvailabilitySlot(models.Model):
+    DAY_CHOICES = [
+        (0, "Monday"),
+        (1, "Tuesday"),
+        (2, "Wednesday"),
+        (3, "Thursday"),
+        (4, "Friday"),
+        (5, "Saturday"),
+        (6, "Sunday"),
+    ]
+    
+    TIME_CHOICES = generate_time_choices()
+    profile = models.ForeignKey(TAProfile, on_delete=models.CASCADE, related_name="availability_slots")
+    day = models.IntegerField(choices=DAY_CHOICES)
+    start_time = models.TimeField(choices=TIME_CHOICES)
+    end_time = models.TimeField(choices=TIME_CHOICES)
+    class Meta:
+        ordering = ['day', 'start_time']
+    def __str__(self):
+        return f"{self.get_day_display()}: {self.start_time.strftime('%I:%M %p')} - {self.end_time.strftime('%I:%M %p')}"

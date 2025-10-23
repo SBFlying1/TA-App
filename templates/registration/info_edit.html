@@ -1,10 +1,52 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-
 {% block content %}
-<h1>Edit TA Information</h1>
-<form action="" method="post">{% csrf_token %}
-    {{ form|crispy }}
-    <input type="submit" value="Update">
-</form>
-{% endblock content %}
+<div class="container mt-4">
+    <h1>Edit TA Information for {{ user.first_name }} </h1>
+    <form action="" method="post" novalidate>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <hr>
+        <h2>My Availability</h2>
+        {{ slot_formset.management_form }}
+        {% if slot_formset.non_form_errors %} <div>{{ slot_formset.non_form_errors }}</div>
+        {% endif %}
+        
+        {% for slot_form in slot_formset %}
+            <div class="slot-form-row">
+                {{ slot_form.as_p }}
+            </div>
+        {% endfor %}
+        <button type="submit" name="save_exit" class="btn btn-primary mt-3">Save and Exit</button>
+        <button type="submit" name="save_stay" class="btn btn-secondary mt-3">Save</button>
+    </form>
+</div> {% endblock content %}
+{% block javascript %}
+{{ block.super }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    $('.slot-form-row').formset({
+        prefix:'{{ slot_formset.prefix }}',
+        addText:'Add time slot',
+        deleteText:'Remove',
+        addCss:'btn btn-success mt-2',
+        deleteCss:'btn btn-danger btn-sm delete-row'
+    });
+    const $addBtn=$('.add-row');
+    $(document).on('focusin','.slot-form-row :input',()=>$addBtn.hide());
+    $(document).on('focusout','.slot-form-row :input',()=>{setTimeout(()=>{if(!$('.slot-form-row :input').is(':focus'))$addBtn.show();},100);});
+    function toggleRemoveButtons(){
+        $('.slot-form-row').each(function(){
+            const $row=$(this);
+            const hasId=$row.find('input[name$="-id"]').val()?.trim()!=='';
+            const $removeBtn=$row.nextAll('.delete-row').first();
+            if($removeBtn.length){ if(hasId){$removeBtn.show();}else{$removeBtn.hide();} }
+        });
+    }
+    toggleRemoveButtons();
+    $(document).on('click','.add-row',()=>setTimeout(toggleRemoveButtons,0));
+    $('input[name$="-DELETE"]').closest('p').hide();
+});
+</script>
+{% endblock javascript %}

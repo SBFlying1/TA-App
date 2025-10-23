@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
-from .models import TA_User, TAProfile
+from .models import TA_User, TAProfile, AvailabilitySlot
 class TASignUpForm(UserCreationForm): 
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
@@ -33,5 +33,14 @@ class TAProfileForm(forms.ModelForm):
     
     class Meta:
         model = TAProfile
-        fields = ["availability_start", "availability_end", "description", "courses"]
+        fields = ["description", "courses"]
 
+class AvailabilitySlotForm(forms.ModelForm):
+    class Meta:
+        model = AvailabilitySlot
+        fields = ['day', 'start_time', 'end_time']
+        widgets = {
+            'day': forms.Select(attrs={'class': 'form-control'}),
+            'start_time': forms.Select(attrs={'class': 'form-control'}),
+            'end_time': forms.Select(attrs={'class': 'form-control'}),
+        }
